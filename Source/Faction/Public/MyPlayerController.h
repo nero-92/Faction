@@ -17,7 +17,9 @@ class FACTION_API AMyPlayerController : public APlayerController {
 public:
 	AMyPlayerController();
 
+	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
+	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(Client, Reliable, BlueprintCallable)
 	void ClientPostLogin();
@@ -29,8 +31,21 @@ public:
 	void ShowInGameMenu();
 	void ToggleInGameMenu();
 
+	UPROPERTY(EditAnywhere)
+	float CamSpeed = 5;
+
+	UPROPERTY()
+	float Margin = 2;
+
+	UFUNCTION()
+	FVector GetCameraPanDirection();
+
 protected:
 	bool bIsInGameMenu = false;
+
+private:
+	int32 ScreenSizeX;
+	int32 ScreenSizeY;
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")

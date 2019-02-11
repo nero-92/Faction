@@ -1,10 +1,20 @@
 // Jack Finan 2019
 
 #include "MyPlayerController.h"
-#include "TimerManager.h"
 
 AMyPlayerController::AMyPlayerController() {
 	bShowMouseCursor = true;
+}
+
+void AMyPlayerController::BeginPlay() {
+	Super::BeginPlay();
+
+	GetViewportSize(ScreenSizeX, ScreenSizeY);
+}
+
+void AMyPlayerController::Tick(float DeltaTime) {
+	if(GetPawn() != nullptr)
+		GetPawn()->AddActorWorldOffset(GetCameraPanDirection() * CamSpeed);
 }
 
 void AMyPlayerController::SetupInputComponent() {
@@ -24,7 +34,6 @@ void AMyPlayerController::SetupInGameUI() {
 				HUDWidgetInstance = CreateWidget(this, HUDWidgetTemplate);
 			}
 			if (!HUDWidgetInstance->GetIsVisible()) {
-				UE_LOG(LogTemp, Warning, TEXT("Adding HUD to viewport"));
 				HUDWidgetInstance->AddToViewport();
 			}
 		}
@@ -59,4 +68,28 @@ void AMyPlayerController::ToggleInGameMenu() {
 		HideInGameMenu();
 	else
 		ShowInGameMenu();
+}
+
+FVector AMyPlayerController::GetCameraPanDirection() {
+	float MousePosX;
+	float MousePosY;
+	float CamDirectionX = 0;
+	float CamDirectionY = 0;
+
+	GetMousePosition(MousePosX, MousePosY);
+
+	if (MousePosX <= Margin) {
+		CamDirectionX = -1;
+	}
+	if (MousePosX >= ScreenSizeX - Margin) {
+		CamDirectionX = 1;
+	}
+	if (MousePosY <= Margin) {
+		CamDirectionY = -1;
+	}
+	if (MousePosY >= ScreenSizeY - Margin) {
+		CamDirectionY = 1;
+	}
+
+	return FVector(CamDirectionX, CamDirectionY, 0);
 }
