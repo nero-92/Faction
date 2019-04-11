@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "Blueprint/UserWidget.h"
+#include "Blueprint/AIBlueprintHelperLibrary.h"
+#include "MyHUD.h"
 #include "MyPlayerController.generated.h"
 
 /**
@@ -40,8 +42,16 @@ public:
 	UFUNCTION()
 	FVector GetCameraPanDirection();
 
+	AMyHUD* HUDPtr;
+
 protected:
 	bool bIsInGameMenu = false;
+
+	void SelectionPressed();
+	void SelectionReleased();
+	void Move();
+
+	TArray <AUnit*> SelectedActors;
 
 private:
 	int32 ScreenSizeX;
